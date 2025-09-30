@@ -41,6 +41,26 @@ Ontologies are fundamental to organizing biological knowledge, providing structu
 
 As part of the DBCLS BioHackathon 2025, we developed **on2vec**, a toolkit for generating vector embeddings from OWL ontologies using Graph Neural Networks with HuggingFace Sentence Transformers integration. The system combines structural graph information from ontology hierarchies with semantic text features from ontology labels and definitions, producing embeddings that can be used as drop-in replacements for standard sentence transformers while incorporating domain-specific ontological knowledge.
 
+# Related Work
+
+Ontology embedding has become an active research area, as comprehensively surveyed by Chen et al. [@citesAsAuthority:ChenSurvey2024], who analyze over 80 methods across applications in information systems, semantic web, and bioinformatics. Early approaches focused on knowledge graph embedding techniques like TransE and ComplEx that treat ontologies as sets of triples, but these often struggled to capture the rich semantics of OWL constructs [@citesAsRelated:Wang2017].
+
+The original On2Vec work by Chen et al. [@citesAsRelated:ChenM2018] introduced embedding-based relation prediction for ontology population, combining component-specific models with hierarchy models. Their approach demonstrated that graph embeddings could effectively capture complex semantic relations in ontology structures. Our work shares the name and motivation but differs in implementation: we focus on integrating pre-trained sentence transformers with modern GNN architectures to create production-ready models compatible with the HuggingFace ecosystem.
+
+OPA2Vec [@citesAsRelated:Smaili2019] pioneered combining formal and informal ontology content, using OWL axioms alongside word embeddings to improve similarity-based prediction in biomedical ontologies. OWL2Vec* [@citesAsRelated:Chen2021] further advanced the field by developing graph embedding methods specifically designed for OWL constructs, achieving strong performance on ontology completion and matching tasks. However, these methods generate standalone embeddings rather than trainable models that can be fine-tuned or integrated into modern NLP pipelines.
+
+More recently, Menad et al. [@citesAsRelated:Menad2024] developed BioSTransformers, demonstrating that Siamese neural models trained on biomedical texts can effectively capture semantic similarity for ontology alignment tasks. Their approach focuses on leveraging pre-trained language models (PLMs) fine-tuned on domain-specific corpora (PubMed) to enrich and align UMLS terminologies. This work shows that transformer-based text embeddings alone can identify semantically similar concepts across ontologies, achieving strong results on biomedical ontology matching tasks.
+
+Our on2vec toolkit distinguishes itself through several contributions:
+
+1. **Structural-Textual Fusion**: Unlike BioSTransformers which relies primarily on textual similarity, we explicitly integrate graph structure through GNN architectures. This captures "what concepts mean" (from text) and "how concepts relate" (from graph structure).
+
+2. **Production-Ready Integration**: Unlike OWL2Vec* and OPA2Vec which generate static embeddings, our models are compatible with sentence-transformers and can be used as drop-in replacements in existing HuggingFace pipelines.
+
+3. **Comprehensive Benchmarking**: We provide extensive MTEB evaluation, hyperparameter optimization with Optuna, and visualization tools for model analysis.
+
+4. **Multiple Architecture Support**: The toolkit supports GCN, GAT, RGCN, and heterogeneous architectures with configurable fusion methods, enabling domain-specific customization.
+
 # Implementation
 
 ## Architecture
@@ -140,6 +160,50 @@ The on2vec toolkit demonstrates that ontology structure can be effectively integ
 3. **Hyperparameter Sensitivity**: Output dimension and learning rate showed the highest importance in Optuna analyses, suggesting these should be the primary targets for optimization when adapting to new ontologies.
 
 4. **Production Readiness**: The HuggingFace integration makes it straightforward to deploy ontology-enhanced models in existing pipelines without code changes, lowering barriers to adoption.
+
+## Potential Use Cases
+
+The on2vec approach is particularly valuable for domain-specific applications where ontological relationships provide crucial context:
+
+**Biomedical Literature Mining**: Ontology-enhanced embeddings can improve clustering and classification of scientific papers by incorporating knowledge about relationships between biological concepts. For example, understanding that "myocardial infarction" and "heart attack" are related through ontological relationships can improve document similarity calculations beyond surface-level text matching.
+
+**Drug Discovery and Repurposing**: By embedding drug ontologies (e.g., DRON) and disease ontologies (e.g., DOID) in the same semantic space, researchers can identify potential drug repurposing candidates based on both textual descriptions and structured relationships between compounds and conditions.
+
+**Clinical Decision Support**: Medical ontologies like SNOMED CT or ICD could be embedded to support clinical coding assistance, symptom-to-diagnosis mapping, and treatment recommendation systems. The structural information captured by GNNs can help identify related conditions and treatments that pure text-based approaches might miss.
+
+**Semantic Search and Question Answering**: In specialized domains with well-curated ontologies, on2vec models can power semantic search engines that understand hierarchical and associative relationships. For instance, searching for "transcription factors" could automatically include relevant subclasses and related regulatory proteins based on ontology structure.
+
+**Data Integration and Harmonization**: Organizations working with heterogeneous biomedical datasets can use ontology-enhanced embeddings to map and align terms across different databases, facilitating data integration efforts in systems biology and translational research.
+
+## Technical Challenges
+
+Several technical challenges emerged during development that inform future work:
+
+**Text-Structure Balance**: A key challenge was achieving optimal balance between text-based semantic information and graph structural information. While vanilla sentence transformers (all-MiniLM-L6-v2) achieved the highest scores (0.5277), this may reflect that the MTEB biomedical clustering tasks are primarily text-matching problems where ontological structure provides limited additional signal. Our best ontology-enhanced model (0.4975) maintains competitive performance while adding structured knowledge capabilities not captured by the benchmark.
+
+**Embedding Dimension Mismatch**: Integrating pre-trained sentence transformer embeddings (typically 384-768 dimensions) with GNN structural embeddings (64-256 dimensions) required careful fusion strategy design. Early naive concatenation approaches led to the text embeddings dominating the learned representations. We addressed this through multiple fusion methods (gated, attention-based, additive) that learn to weight the contributions of each modality.
+
+**Training Stability**: Models with complex architectures (heterogeneous GNNs, multi-relation graphs) showed training instability with certain hyperparameter combinations. Careful tuning of learning rates and the addition of dropout regularization improved convergence, but some ontologies remained challenging to train effectively.
+
+**Computational Efficiency**: Large ontologies like Cell Ontology (CL) with tens of thousands of classes required significant memory for batch processing. We implemented batch size optimization and gradient accumulation strategies to enable training on standard hardware, but very large ontologies remain computationally demanding.
+
+## Need for Domain-Specific Evaluation
+
+A critical limitation identified during this work is the **lack of evaluation benchmarks that specifically measure the value of ontological structure** for downstream tasks. The MTEB biomedical clustering tasks evaluate general-purpose text similarity, but do not directly test whether models capture ontological relationships like subsumption hierarchies, part-whole relationships, or cross-references.
+
+**Proposed Evaluation Extensions**:
+
+1. **Ontology Completion Tasks**: Given a partial ontology structure, predict missing edges (e.g., is-a relationships, part-of relationships). This directly tests whether embeddings capture structural information.
+
+2. **Semantic Similarity Benchmarks**: Evaluate against expert-curated term similarity ratings that account for ontological relationships, not just textual overlap. Datasets like UMLS semantic similarity benchmarks could be adapted for this purpose.
+
+3. **Hierarchy-Aware Clustering**: Modify clustering evaluation metrics to reward hierarchically consistent cluster assignments. For example, if two terms share a common parent in the ontology, clustering them together should be favored.
+
+4. **Cross-Ontology Alignment**: Test whether models trained on one ontology (e.g., Gene Ontology) can identify equivalent or related terms in another ontology (e.g., protein databases), leveraging ontological structure to bridge terminological differences.
+
+5. **Domain-Specific QA Tasks**: Create question-answering benchmarks where correct answers require reasoning over ontological relationships, such as "What are all diseases affecting the cardiovascular system?" which requires understanding hierarchical disease classifications.
+
+Without such domain-specific evaluations, it remains unclear whether slightly lower performance on general text-matching tasks is offset by improved performance on tasks that truly require ontological reasoning. Future work should develop comprehensive benchmarks that measure the unique value proposition of ontology-enhanced embeddings.
 
 ## Future Directions
 

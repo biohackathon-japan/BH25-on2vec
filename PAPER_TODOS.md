@@ -123,14 +123,24 @@ Example structure:
 - [ ] Document computational resources used
 
 ### 2. Results Section
-- [ ] Add quantitative comparison between fusion methods
-- [ ] Report best configurations per ontology
-- [ ] Discuss failure modes and limitations
+- [x] Add quantitative comparison between fusion methods ✅
+- [x] Report best configurations per ontology ✅
+- [x] Discuss failure modes and limitations ✅
 
-### 3. Discussion
-- [ ] Explain why vanilla baseline outperforms in some cases
-- [ ] Discuss when ontology structure helps vs hurts
-- [ ] Relate findings to Menad et al. 2024 work on BioSTransformers
+### 3. Discussion - COMPLETED ✅
+- [x] Explain why vanilla baseline outperforms in some cases ✅
+- [x] Discuss when ontology structure helps vs hurts ✅
+- [x] Relate findings to Menad et al. 2024 work on BioSTransformers ✅
+- [x] Add use cases section ✅
+- [x] Add technical challenges section ✅
+- [x] Add domain-specific evaluation needs ✅
+
+### 4. Related Work - COMPLETED ✅
+- [x] Cite comprehensive survey (Chen et al. 2024) ✅
+- [x] Cite original On2Vec (Chen et al. 2018) ✅
+- [x] Cite OPA2Vec and OWL2Vec* ✅
+- [x] Compare with BioSTransformers approach ✅
+- [x] Clearly position our contributions ✅
 
 ## File Locations Reference
 
