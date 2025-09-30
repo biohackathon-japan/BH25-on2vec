@@ -1,6 +1,6 @@
 ---
-title: 'DBCLS BioHackathon 2025 report: on2vec - Ontology Embeddings with Graph Neural Networks and Sentence Transformers'
-title_short: 'BioHackJP25: on2vec Ontology Embeddings'
+title: 'on2vec: Ontology Embeddings with Graph Neural Networks and Sentence Transformers'
+title_short: 'on2vec: Ontology Embeddings'
 tags:
   - Ontologies
   - Graph Neural Networks
