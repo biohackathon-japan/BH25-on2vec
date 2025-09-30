@@ -10,14 +10,17 @@ tags:
 authors:
   - name: David Steinberg
     affiliation: 1
+    orcid: 0000-0001-6683-2270
   - name: Dorothy Ellis
     affiliation: 2
+    orcid: FILLMEIN
   - name: Maxat Kulmanov
     affiliation: 3
+    orcid: FILLMEIN
 affiliations:
-  - name: Resium
+  - name: Camber
     index: 1
-  - name: Independent Researcher
+  - name: FILLMEIN
     index: 2
   - name: King Abdullah University of Science and Technology
     index: 3
