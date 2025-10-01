@@ -77,9 +77,9 @@ on2vec implements a hybrid architecture that fuses structural and semantic infor
 
 5. **HuggingFace Integration**: The resulting model is packaged as a sentence-transformers compatible model with auto-generated model cards and metadata.
 
-## Command-Line Interface
+## Command-Line Interface and Distribution
 
-The toolkit provides a comprehensive CLI with commands for end-to-end workflows:
+The on2vec toolkit is available on PyPI (`pip install on2vec`) and provides a comprehensive CLI with commands for end-to-end workflows:
 
 ```bash
 # Create production-ready model from ontology
@@ -91,6 +91,8 @@ on2vec benchmark ./hf_models/my-model --quick
 # Compare with vanilla baseline
 on2vec compare ./hf_models/my-model --detailed
 ```
+
+The toolkit is designed as an extensible platform for experimentation rather than a static implementation. We encourage the community to explore alternative fusion methods, representation learning approaches, and GNN architectures. The modular design allows researchers to easily swap components and test novel approaches to combining structural and textual information in ontology embeddings.
 
 ## Hyperparameter Optimization
 
@@ -137,13 +139,13 @@ Figure 2 shows task-specific performance, with ClusTREC-Covid proving most tract
 
 ## Visualizations and Analysis
 
-Comprehensive visualization tools were developed to analyze model performance. Figure 3 shows the top-performing models ranked by average score, demonstrating the competitive performance of ontology-enhanced approaches.
+Comprehensive visualization tools were developed to analyze model performance. Figure 3 shows the top-performing models ranked by average score, demonstrating the competitive performance of ontology-enhanced approaches across different architectural configurations and fusion methods.
 
-![Comparison of top model performance on biomedical clustering tasks](./figures/model_performance.png){ width=90% }
+![Comparison of model performance across different architectures and fusion strategies](./figures/model_performance.png){ width=90% }
 
-Hyperparameter optimization revealed that output dimension and learning rate had the strongest impact on model performance (Figure 4), suggesting these should be prioritized when adapting to new ontologies.
+We explored hyperparameter optimization using Optuna for automated search across different configurations. Figure 4 shows analysis of hyperparameter importance across our experiments, revealing that output dimension and learning rate had the strongest impact on model performance, suggesting these should be prioritized when adapting to new ontologies.
 
-![Hyperparameter importance from Optuna optimization](./figures/hyperparameter_analysis.png){ width=80% }
+![Hyperparameter importance analysis across experimental configurations](./figures/hyperparameter_analysis.png){ width=80% }
 
 Performance analysis by source ontology (Figure 5) revealed that different biomedical domains benefit from different architectural choices. Ontologies with denser relationship graphs (e.g., Cell Ontology) performed better with attention-based architectures, while hierarchical ontologies were well-served by simpler GCN approaches.
 
@@ -205,15 +207,25 @@ A critical limitation identified during this work is the **lack of evaluation be
 
 Without such domain-specific evaluations, it remains unclear whether slightly lower performance on general text-matching tasks is offset by improved performance on tasks that truly require ontological reasoning. Future work should develop comprehensive benchmarks that measure the unique value proposition of ontology-enhanced embeddings.
 
-## Future Directions
+## Future Directions and Community Development
 
-Several extensions were identified during the hackathon:
+The on2vec toolkit, available on PyPI at https://pypi.org/project/on2vec/, is designed as an open platform for continued research and development. We actively encourage the community to:
+
+- **Experiment with Novel Fusion Methods**: The current implementation supports concatenation, gated, attention-based, and weighted averaging fusion. We invite exploration of alternative approaches such as cross-attention, adaptive gating, or learned fusion weights.
+
+- **Explore GNN Architectures**: Beyond GCN, GAT, and RGCN, researchers could investigate Graph Transformers, Message Passing Neural Networks, or domain-specific architectures tailored to ontology characteristics.
+
+- **Develop Alternative Representation Learning**: The modular design allows experimentation with different loss functions (contrastive learning, metric learning, knowledge distillation), training strategies, and embedding objectives.
+
+Several specific extensions were identified during development:
 
 - Multi-ontology training for cross-domain transfer learning
 - Fine-tuning capabilities for domain adaptation
 - Embedding injection directly into OWL files for persistence
 - Expanded evaluation on semantic similarity tasks
 - Integration with ontology alignment workflows
+
+We welcome contributions, issue reports, and pull requests at https://github.com/david4096/on2vec.
 
 ## Acknowledgements
 
