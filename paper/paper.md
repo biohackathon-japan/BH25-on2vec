@@ -20,6 +20,9 @@ authors:
   - name: Núria Queralt Rosinach
     affiliation: 4
     orcid: 0000-0003-0169-8159
+  - name: Hirokazu Chiba
+    affiliation: 5
+    orcid: 0000-0003-4062-8903
 affiliations:
   - name: Camber
     index: 1
@@ -29,6 +32,8 @@ affiliations:
     index: 3
   - name: Leiden University Medical Center
     index: 4
+  - name: Database Center for Life Science
+    index: 5
 date: 19 September 2025
 cito-bibliography: paper.bib
 event: BH25JP
