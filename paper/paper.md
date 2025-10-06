@@ -13,17 +13,22 @@ authors:
     orcid: 0000-0001-6683-2270
   - name: Dorothy Ellis
     affiliation: 2
-    orcid: FILLMEIN
+    orcid: 0000-0002-8624-0042
   - name: Maxat Kulmanov
     affiliation: 3
-    orcid: FILLMEIN
+    orcid: 0000-0003-1710-1820
+  - name: Núria Queralt Rosinach
+    affiliation: 4
+    orcid: 0000-0003-0169-8159
 affiliations:
   - name: Camber
     index: 1
-  - name: FILLMEIN
+  - name: RIKEN Center for Integrative Medical Sciences, Laboratory for Integrative Genomics
     index: 2
   - name: King Abdullah University of Science and Technology
     index: 3
+  - name: Leiden University Medical Center
+    index: 4
 date: 19 September 2025
 cito-bibliography: paper.bib
 event: BH25JP
