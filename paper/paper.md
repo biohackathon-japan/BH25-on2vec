@@ -17,7 +17,7 @@ authors:
   - name: Maxat Kulmanov
     affiliation: 3
     orcid: 0000-0003-1710-1820
-  - name: Núria Queralt Rosinach
+  - name: Núria Queralt-Rosinach
     affiliation: 4
     orcid: 0000-0003-0169-8159
   - name: Hirokazu Chiba
@@ -233,7 +233,27 @@ Several specific extensions were identified during development:
 - Fine-tuning capabilities for domain adaptation
 - Embedding injection directly into OWL files for persistence
 - Expanded evaluation on semantic similarity tasks
-- Integration with ontology alignment workflows
+- Integration with ontology alignment workflows. During the BioHackathon, we started evaluating **on2vec** on the ontology alignment use case. We designed an experiment for the alignment of two commonly used ontologies in the biomedical domain: OMIM (Online Mendelian Inheritance in Man) [@citesAsAuthority:OMIM] and ORDO (Orphanet Rare Disease Ontology) [@citesAsAuthority:ORDO]. Our method was based on the [OAEI 2025 challenge](https://liseda-lab.github.io/OAEI-Bio-ML/2025/index.html) and followed a five-steps workflow:
+
+    1. Merge two ontologies on a graph structure
+    2. Train **on2vec** on the merged ontological graph
+    3. Create embeddings
+    4. Evaluate alignment with cosinus similarity
+    5. Evaluate alignment with a ML model trained on paired embeddings
+       
+For the evaluation, we downloaded the omim-ordo benchmark datasets Version OAEI Bio-ML 2025 from [Zenodo](https://zenodo.org/records/13119437). This work is ongoing. We completed steps 1-3, creating embeddings using the **on2vec** command-line interface with commands:
+
+```bash
+# Train a GCN model from the omim-ordo merged ontologies graph
+on2vec train ontology_merged.owl --output omim_ordo_alignment_g cn_model.pt --model-type gcn --epochs 100
+ 
+# Create ontology embeddings
+on2vec embed --output omim_ordo_alignment_gcn_embeddings.parquet omim_ordo_alignment_gcn_model.pt ontology_merged.owl
+```
+
+
+We aim at finishing the evaluation, 4-5 steps, async or in a future hackathon with a more comprehensive evaluation set up. Code is publicly available in the `oaei-usecase/` folder on the GitHub repository of the tool.
+
 
 We welcome contributions, issue reports, and pull requests at https://github.com/david4096/on2vec.
 
