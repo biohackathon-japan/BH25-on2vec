@@ -233,7 +233,8 @@ Several specific extensions were identified during development:
 - Fine-tuning capabilities for domain adaptation
 - Embedding injection directly into OWL files for persistence
 - Expanded evaluation on semantic similarity tasks
-- Integration with ontology alignment workflows. During the BioHackathon, we started evaluating **on2vec** on the ontology alignment use case. We designed an experiment for the alignment of two commonly used ontologies in the biomedical domain: OMIM (Online Mendelian Inheritance in Man) [@citesAsAuthority:OMIM] and ORDO (Orphanet Rare Disease Ontology) [@citesAsAuthority:ORDO]. Our method was based on the [OAEI 2025 challenge](https://liseda-lab.github.io/OAEI-Bio-ML/2025/index.html) and followed a five-steps workflow:
+- Integration with ontology alignment workflows.
+  During the BioHackathon, we started evaluating **on2vec** on the ontology alignment use case. We designed an experiment for the alignment of two commonly used ontologies in the biomedical domain: OMIM (Online Mendelian Inheritance in Man) [@citesAsAuthority:OMIM] and ORDO (Orphanet Rare Disease Ontology) [@citesAsAuthority:ORDO]. Our method was based on the [OAEI 2025 challenge](https://liseda-lab.github.io/OAEI-Bio-ML/2025/index.html) and followed a five-steps workflow:
 
     1. Merge two ontologies on a graph structure
     2. Train **on2vec** on the merged ontological graph
@@ -245,10 +246,12 @@ For the evaluation, we downloaded the omim-ordo benchmark datasets Version OAEI 
 
 ```bash
 # Train a GCN model from the omim-ordo merged ontologies graph
-on2vec train ontology_merged.owl --output omim_ordo_alignment_g cn_model.pt --model-type gcn --epochs 100
+on2vec train ontology_merged.owl --output omim_ordo_alignment_g cn_model.pt
+--model-type gcn --epochs 100
  
 # Create ontology embeddings
-on2vec embed --output omim_ordo_alignment_gcn_embeddings.parquet omim_ordo_alignment_gcn_model.pt ontology_merged.owl
+on2vec embed --output omim_ordo_alignment_gcn_embeddings.parquet
+omim_ordo_alignment_gcn_model.pt ontology_merged.owl
 ```
 
 
